@@ -4,6 +4,10 @@ import { getNextGeneration } from './CellGrowth';
 const initialGridSize = 20;
 const initialGrowthRate = 1000;
 
+const isGridFull = (cells: Set<string>, gridSize: number): boolean => {
+  return cells.size === gridSize * gridSize;
+};
+
 const CellGrowthSimulation: React.FC = () => {
   const [cells, setCells] = useState<Set<string>>(new Set());
   const [isRunning, setIsRunning] = useState(false);
@@ -14,10 +18,18 @@ const CellGrowthSimulation: React.FC = () => {
 
   useEffect(() => {
     if (isRunning) {
+      if (isGridFull(cells, gridSize)) {
+        setIsRunning(false);
+        setGrowthHistory((prevHistory) => [...prevHistory, cells.size]);
+        return;
+      }
       intervalRef.current = window.setInterval(() => {
-        setCells(prevCells => {
+        setCells((prevCells) => {
           const nextGeneration = getNextGeneration(prevCells, gridSize);
-          setGrowthHistory(prevHistory => [...prevHistory, nextGeneration.size]);
+          setGrowthHistory((prevHistory) => [...prevHistory, nextGeneration.size]);
+          if (isGridFull(nextGeneration, gridSize)) {
+            setIsRunning(false);
+          }
           return nextGeneration;
         });
       }, growthRate);
@@ -31,11 +43,11 @@ const CellGrowthSimulation: React.FC = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, growthRate, gridSize]);
+  }, [isRunning, growthRate, gridSize, cells]);
 
   const toggleCell = (x: number, y: number) => {
     const cellKey = `${x},${y}`;
-    setCells(prevCells => {
+    setCells((prevCells) => {
       const newCells = new Set(prevCells);
       if (newCells.has(cellKey)) {
         newCells.delete(cellKey);
@@ -47,7 +59,7 @@ const CellGrowthSimulation: React.FC = () => {
   };
 
   const handleStartPause = () => {
-    setIsRunning(prev => !prev);
+    setIsRunning((prev) => !prev);
   };
 
   const handleReset = () => {
