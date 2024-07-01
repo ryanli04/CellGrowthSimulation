@@ -87,7 +87,7 @@ cell-growth-simulation/
 * __Memory Usage:__ Efficient use of sets for storing cell states ensures minimal memory overhead.
 * __Responsiveness:__ The application maintains high responsiveness by leveraging React's state management and efficient DOM updates.
 
-###Performance Review
+### Performance Review
 * The application handles the default grid size (20x20) efficiently, with updates every 1 second (default).
 * Larger grid sizes may impact performance due to the increased number of cells to process. Optimization strategies include reducing the interval for cell division or improving the algoritm's efficiency.
 * The use of `requestAnimationFrame` could be considered for smoother updates and animations.
