@@ -1,5 +1,5 @@
 import React from 'react';
-import CellGrowthSimulation from './CellGrowthSimulation';
+import CellGrowthSimulation from './components/CellGrowthSimulation';
 import './App.css';
 
 const App: React.FC = () => {

@@ -1,46 +1,96 @@
-# Getting Started with Create React App
+# About the Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Cell Growth Simulation project is a React application that simulates the growth of bacterial cells on a grid representing a petri dish. The application provides a visual representation of cell growth according to specific rules and allows user interaction for placing and removing cells. Key features include:
 
-## Available Scripts
+* Grid representation of a petri dish (20x20 by default, adjustable)
+* Cells divide every fixed time interval if adjacent empty cells are available
+* User controls to start/pause/reset the simulation and adjust the growth interval and grid size
+* Visualization of growth history over time
+* Accessibility features like keyboard navigation and screen reader compatibility
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+__Grid Representation:__ Display a grid where each cell can be empty or occupied by a bacterial cell.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+__Growth Rules:__ Cells divide at set intervals and require adjacent empty cells to divide.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+__User Controls:__ Buttons to start/pause/reset the simulation and input fields to set the growth interval and grid size.
 
-### `npm test`
+__Manual Cell Placement:__ Users can manually place or remove cells by clicking on the grid.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+__Growth History:__ Visualize the growth rate of the colony over time.
 
-### `npm run build`
+__Dynamic Grid Size:__ Adjust the grid size dynamically.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+__Accessibility:__ Features such as keyboard navigation and screen reader compatibility.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Setup and Run the Project Locally
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+ __1.__ Clone the Repository
+ ```console
+ git clone https://https://github.com/ryanli04/CellGrowthSimulation.git
+ cd cell-growth-simulation
+ ```
 
-### `npm run eject`
+ __2.__ Install Dependencies
+ 
+ Make sure you have Node.js installed. Then, install the project      dependencies:
+ ```console
+ npm install
+ ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+ __3.__ Run the Application
+ ```console
+ npm start
+ ```
+## Project Structure
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```console
+cell-growth-simulation/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   └── CellGrowthSimulation.tsx
+│   ├── utils/
+│   │   └── CellGrowth.ts
+│   ├── App.tsx
+│   ├── index.tsx
+│   ├── index.css
+│   └── App.css
+├── package.json
+├── README.md
+└── tsconfig.json
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Key components
+* __CellGrowthSimulation.tsx:__ The main component managing the state and rendering the grid, controls, and growth history.
+* __CellGrowth.ts:__ Utility functions including the `getNextGeneration` function that applies the growth rules to generate the next state of the grid.
+* __App.tsx:__ Root component that renders the `CellGrowthSimulation` component.
+* __index.tsx:__ Entry point of the application.
+* __App.css:__ CSS file for styling.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Assumptions and Additional Features
+### Assumptions
+* The grid is square, with the same number of rows and columns.
+* Cells divide every fixed time interval, provided there's an adjacent empty cell.
+* The simulation stops and the growth history is no longer updated once the grid is fully occupied.
 
-## Learn More
+### Additional Features
+* Visualization of growth history to track the number of occupied cells over time.
+* Dynamc adjustment of the grid size.
+* Accessibility features for improved user experience.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Performance Analysis
+### Performance Metrics
+* __Time Complexity:__ The `getNextGeneration` function has a time complexity of O(n^2) due to the need to check each cell's neighbours.
+* __Memory Usage:__ Efficient use of sets for storing cell states ensures minimal memory overhead.
+* __Responsiveness:__ The application maintains high responsiveness by leveraging React's state management and efficient DOM updates.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+###Performance Review
+* The application handles the default grid size (20x20) efficiently, with updates every 1 second (default).
+* Larger grid sizes may impact performance due to the increased number of cells to process. Optimization strategies include reducing the interval for cell division or improving the algoritm's efficiency.
+* The use of `requestAnimationFrame` could be considered for smoother updates and animations.
+
+## Conclusion
+The Cell Growth Simulation project provides a robust and interactive visualization of bacterial cell growth on a grid. With user-friendly controls, accessibility features, and detailed growth history, it offers a comprehensive tool for studying cell growth dynamics.

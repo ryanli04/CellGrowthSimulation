@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getNextGeneration } from './CellGrowth';
+import { getNextGeneration } from '../utils/CellGrowth';
 
 const initialGridSize = 20;
 const initialGrowthRate = 1000;
