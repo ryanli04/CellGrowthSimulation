@@ -14,6 +14,7 @@ const CellGrowthSimulation: React.FC = () => {
   const [growthRate, setGrowthRate] = useState(initialGrowthRate);
   const [gridSize, setGridSize] = useState(initialGridSize);
   const [growthHistory, setGrowthHistory] = useState<number[]>([]);
+  const [focusedCell, setFocusedCell] = useState<[number, number] | null>(null);
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -79,15 +80,63 @@ const CellGrowthSimulation: React.FC = () => {
     setGrowthHistory([]);
   };
 
+  //Keyboard navigation
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, row: number, col: number) => { 
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        toggleCell(row, col);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (row > 0) setFocusedCell([row - 1, col]);
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        if (row < gridSize - 1) setFocusedCell([row + 1, col]);
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        if (col > 0) setFocusedCell([row, col - 1]);
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        if (col < gridSize - 1) setFocusedCell([row, col + 1]);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (focusedCell) {
+      const [row, col] = focusedCell;
+      const cellElement = document.getElementById(`cell-${row}-${col}`);
+      cellElement?.focus();
+    }
+  }, [focusedCell]);
+
   return (
     <div className="App">
       <h1>Cell Growth Simulation</h1>
       <div className="controls">
         <div>
-          <button onClick={handleStartPause}>
+          <button
+            onClick={handleStartPause}
+            onKeyDown={(e) => e.key === 'Enter' && handleStartPause()}
+            tabIndex={0}
+            aria-pressed={isRunning}
+            aria-label={isRunning ? 'Pause simulation' : 'Start simulation'}  //aria-label for screen reader compatibility
+          >
             {isRunning ? 'Pause' : 'Start'}
           </button>
-          <button onClick={handleReset}>Reset</button>
+          <button
+            onClick={handleReset}
+            onKeyDown={(e) => e.key === 'Enter' && handleReset()}
+            tabIndex={0}
+            aria-label="Reset simulation"
+          >
+            Reset
+          </button>
         </div>
         <div>
           <label>
@@ -96,8 +145,11 @@ const CellGrowthSimulation: React.FC = () => {
               type="number"
               value={growthRate}
               onChange={handleGrowthRateChange}
+              onKeyDown={(e) => e.key === 'Enter' && handleGrowthRateChange(e as any)}
               min="100"
               step="100"
+              tabIndex={0}
+              aria-label="Set growth interval in milliseconds"
             />
           </label>
           <label>
@@ -106,8 +158,11 @@ const CellGrowthSimulation: React.FC = () => {
               type="number"
               value={gridSize}
               onChange={handleGridSizeChange}
+              onKeyDown={(e) => e.key === 'Enter' && handleGridSizeChange(e as any)}
               min="10"
               max="50"
+              tabIndex={0}
+              aria-label="Set grid size"
             />
           </label>
         </div>
@@ -126,13 +181,16 @@ const CellGrowthSimulation: React.FC = () => {
             const cellKey = `${row},${col}`;
             return (
               <div
+                id={`cell-${row}-${col}`}
                 key={cellKey}
                 onClick={() => toggleCell(row, col)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && toggleCell(row, col)}
+                onKeyDown={(e) => handleKeyDown(e, row, col)}
                 className={`cell ${cells.has(cellKey) ? 'occupied' : ''}`}
                 aria-label={`Cell ${row + 1}, ${col + 1} ${cells.has(cellKey) ? 'occupied' : 'empty'}`}
+                aria-live="polite"
+                aria-atomic="true"
               />
             );
           })
